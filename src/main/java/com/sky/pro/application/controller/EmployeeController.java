@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -23,37 +24,37 @@ public class EmployeeController {
     }
 
     @GetMapping("/all")
-    public List<Employee> all() {
+    public Collection<Employee> all() {
         return  employeeService.All();
     }
 
     @GetMapping("/remove")
-    public boolean remove(@RequestParam(name = "firstName") String firstName,
+    public Employee remove(@RequestParam(name = "firstName") String firstName,
                         @RequestParam(name = "lastName") String lastName) {
         try {
             return employeeService.Remove(firstName, lastName);
         }catch (RuntimeException ex){
-            return false;
+            return null;
         }
     }
 
     @GetMapping("/add")
-    public boolean add(@RequestParam(name = "firstName") String firstName,
+    public Employee add(@RequestParam(name = "firstName") String firstName,
                           @RequestParam(name = "lastName") String lastName) {
         try {
             return employeeService.Add(firstName, lastName);
         }catch (RuntimeException ex){
-            return false;
+            return null;
         }
     }
 
     @GetMapping("/find")
-    public boolean find(@RequestParam(name = "firstName") String firstName,
+    public Employee find(@RequestParam(name = "firstName") String firstName,
                        @RequestParam(name = "lastName") String lastName) {
         try {
             return employeeService.Find(firstName, lastName);
         }catch (RuntimeException ex){
-            return false;
+            return null;
         }
     }
 

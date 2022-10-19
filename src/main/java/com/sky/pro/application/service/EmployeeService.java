@@ -7,58 +7,58 @@ import com.sky.pro.application.model.Employee;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeService {
 
-    private List<Employee> employees = new ArrayList<Employee>();
+    private Map<String, Employee> employees = new HashMap<>();
     private int maxList = 15;
 
     public EmployeeService() {
-        employees.add(new Employee("Ivanov", "Ivan"));
-        employees.add(new Employee("Ivanov2", "Ivan2"));
-        employees.add(new Employee("Ivanov3", "Ivan3"));
-        employees.add(new Employee("Ivanov4", "Ivan4"));
-        employees.add(new Employee("Ivanov5", "Ivan5"));
-        employees.add(new Employee("Ivanov6", "Ivan6"));
-        employees.add(new Employee("Ivanov7", "Ivan7"));
-        employees.add( new Employee("Ivanov8", "Ivan8"));
-        employees.add(new Employee("Ivanov9", "Ivan9"));
-        employees.add(new Employee("Ivanov10", "Ivan10"));
+        employees.put(new Employee("Ivanov", "Ivan").getFullName(), new Employee("Ivanov", "Ivan"));
+        employees.put(new Employee("Ivanov2", "Ivan2").getFullName(), new Employee("Ivanov2", "Ivan2"));
+        employees.put(new Employee("Ivanov3", "Ivan3").getFullName(), new Employee("Ivanov3", "Ivan3"));
+        employees.put(new Employee("Ivanov4", "Ivan4").getFullName(), new Employee("Ivanov4", "Ivan4"));
+        employees.put(new Employee("Ivanov5", "Ivan5").getFullName(), new Employee("Ivanov5", "Ivan5"));
+        employees.put(new Employee("Ivanov6", "Ivan6").getFullName(), new Employee("Ivanov6", "Ivan6"));
+        employees.put(new Employee("Ivanov7", "Ivan7").getFullName(), new Employee("Ivanov7", "Ivan7"));
+        employees.put(new Employee("Ivanov8", "Ivan8").getFullName(), new Employee("Ivanov8", "Ivan8"));
+        employees.put(new Employee("Ivanov9", "Ivan9").getFullName(), new Employee("Ivanov9", "Ivan9"));
+        employees.put(new Employee("Ivanov10", "Ivan10").getFullName(), new Employee("Ivanov10", "Ivan10"));
     }
 
-    public List<Employee> All() {
-        return employees;
+    public Collection<Employee> All() {
+        return employees.values();
     }
 
-    public boolean Add(String firstName, String lastName) {
+    public Employee Add(String firstName, String lastName) {
         Employee newEmployee = new Employee(lastName, firstName);
-        if(employees.contains(newEmployee))
+        if(employees.containsKey(newEmployee.getFullName()))
             throw new EmployeeAlreadyAddedException("Такой сотрудник есть");
         if(employees.size() + 1 > maxList)
             throw new EmployeeStorageIsFullException("Массив переполнен");
 
-        employees.add(newEmployee);
-        return true;
+        employees.put(newEmployee.getFullName(), newEmployee);
+        return newEmployee;
     }
 
-    public boolean Remove(String firstName, String lastName) {
+    public Employee Remove(String firstName, String lastName) {
 
         Employee removeEmployee = new Employee(lastName,firstName);
-        if(employees.remove(removeEmployee))
-            return true;
-
-        throw new EmployeeNotFoundException("Не найден работник");
+        if(employees.containsKey(removeEmployee.getFullName()))
+            employees.remove(removeEmployee.getFullName());
+        else
+            throw new EmployeeNotFoundException("Не найден работник");
+        return removeEmployee;
     }
 
-    public boolean Find(String firstName, String lastName) {
+    public Employee Find(String firstName, String lastName) {
 
         Employee findEmployee = new Employee(lastName, firstName);
-        if(!employees.contains(findEmployee))
+        if(!employees.containsKey(findEmployee))
             throw new EmployeeNotFoundException("Не найден работник");
 
-        return true;
+        return findEmployee;
     }
 }
