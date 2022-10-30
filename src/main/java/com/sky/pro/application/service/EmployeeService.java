@@ -3,11 +3,15 @@ package com.sky.pro.application.service;
 import com.sky.pro.application.exception.EmployeeAlreadyAddedException;
 import com.sky.pro.application.exception.EmployeeNotFoundException;
 import com.sky.pro.application.exception.EmployeeStorageIsFullException;
+import com.sky.pro.application.exception.InvalidlnputException;
 import com.sky.pro.application.model.Employee;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class EmployeeService {
@@ -33,6 +37,11 @@ public class EmployeeService {
     }
 
     public Employee Add(String firstName, String lastName) {
+
+        if (!validateInput (firstName, lastName)) {
+            throw new InvalidlnputException();
+        }
+
         Employee newEmployee = new Employee(lastName, firstName);
         if(employees.containsKey(newEmployee.getFullName()))
             throw new EmployeeAlreadyAddedException("Такой сотрудник есть");
@@ -45,6 +54,10 @@ public class EmployeeService {
 
     public Employee Remove(String firstName, String lastName) {
 
+        if (!validateInput (firstName, lastName)) {
+            throw new InvalidlnputException();
+        }
+
         Employee removeEmployee = new Employee(lastName,firstName);
         if(employees.containsKey(removeEmployee.getFullName()))
             employees.remove(removeEmployee.getFullName());
@@ -55,10 +68,18 @@ public class EmployeeService {
 
     public Employee Find(String firstName, String lastName) {
 
+        if (!validateInput (firstName, lastName)) {
+            throw new InvalidlnputException();
+        }
+
         Employee findEmployee = new Employee(lastName, firstName);
         if(!employees.containsKey(findEmployee))
             throw new EmployeeNotFoundException("Не найден работник");
 
         return findEmployee;
+    }
+
+    private boolean validateInput(String firstName, String lastName) {
+        return isAlpha(firstName) && isAlpha(lastName);
     }
 }

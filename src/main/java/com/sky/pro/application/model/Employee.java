@@ -1,6 +1,11 @@
 package com.sky.pro.application.model;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Locale;
 import java.util.Objects;
+
+import static org.apache.commons.lang3.StringUtils.capitalize;
 
 public class Employee {
     private String firstName;
@@ -8,8 +13,8 @@ public class Employee {
 
 
     public Employee (String lastName, String firstName) {
-        this.lastName = lastName;
-        this.firstName = firstName;
+        this.lastName = capitalize(lastName.toLowerCase(Locale.ROOT));
+        this.firstName = capitalize(firstName.toLowerCase(Locale.ROOT));
     }
 
     public String getFirstName() {
